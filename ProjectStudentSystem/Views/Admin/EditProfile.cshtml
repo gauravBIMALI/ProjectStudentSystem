@@ -1,0 +1,68 @@
+﻿@model ProjectStudentSystem.ViewModels.AdminProfileViewModel
+@{
+    ViewData["Title"] = "Edit Admin Profile";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Edit Profile</h3>
+
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success text-center">
+                            @TempData["SuccessMessage"]
+                        </div>
+                    }
+
+                    <form asp-action="EditProfile" method="post" enctype="multipart/form-data">
+                        <div class="text-center mb-4">
+                            <img id="profilePreview"
+                                 src="@(Model.ProfileImage ?? "/images/default-profile.png")"
+                                 class="rounded-circle img-fluid"
+                                 style="width: 150px; height:150px; object-fit:cover;"
+                                 alt="Profile Image">
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ProfileImageFile" class="form-label">Profile Image</label>
+                            <input asp-for="ProfileImageFile" type="file" class="form-control" accept="image/*" onchange="previewImage(event)">
+                            <span asp-validation-for="ProfileImageFile" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Full Name</label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">Update Profile</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('profilePreview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+}

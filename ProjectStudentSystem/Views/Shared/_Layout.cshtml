@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - College Management System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ProjectStudentSystem.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-gradient shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-graduation-cap me-2 fs-4"></i>
+                    <span class="fw-bold">College Management</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                 <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home me-1"></i> Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Privacy">
+                                <i class="fas fa-shield-alt me-1"></i> Privacy
+                            </a>
+                        </li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user-circle me-1"></i> @User.Identity.Name
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+
+                                    @* Admin Links *@
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Profile"><i class="fas fa-user me-2"></i> Profile</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Dashboard"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a></li>
+                                    }
+
+                                    @* Teacher Links *@
+                                    @if (User.IsInRole("Teacher"))
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Teacher" asp-action="Profile"><i class="fas fa-user me-2"></i> Profile</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Teacher" asp-action="Courses"><i class="fas fa-book me-2"></i> My Courses</a></li>
+                                    }
+
+                                    @* Student Links *@
+                                    @if (User.IsInRole("Student"))
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Student" asp-action="Profile"><i class="fas fa-user me-2"></i> Profile</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Student" asp-action="Enrollments"><i class="fas fa-graduation-cap me-2"></i> My Enrollments</a></li>
+                                    }
+
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item text-danger" asp-controller="Account" asp-action="Logout">
+                                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">
+                                    <i class="fas fa-sign-in-alt me-1"></i> Login
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+                </div> 
+
+               
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid px-4">
+        <main role="main" class="py-4">
+             @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+                    <div class="toast show" role="alert">
+                        <div class="toast-header bg-success text-white">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <strong class="me-auto">Success</strong>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                        </div>
+                        <div class="toast-body">
+                            @TempData["SuccessMessage"]
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            } 
+            @RenderBody()
+        </main>
+    </div> 
+
+    <footer class="footer bg-light border-top mt-auto py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="text-primary"><i class="fas fa-graduation-cap me-2"></i>College Management System</h5>
+                    <p class="text-muted mb-0" >Empowering education through technology,  <br /> Developed by <b>Gaurav D. Bimali</b></p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="text-muted mb-0">
+                        &copy; 2025 - All Rights Reserved
+                    </p>
+                    <a href="#" class="text-decoration-none text-muted me-3">
+                        <i class="fas fa-shield-alt me-1"></i> Privacy Policy
+                    </a>
+                    <a href="#" class="text-decoration-none text-muted">
+                        <i class="fas fa-file-contract me-1"></i> Terms of Service
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        .navbar-dark.bg-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        }
+
+        .navbar-brand {
+            font-size: 1.3rem;
+            transition: transform 0.3s ease;
+        }
+
+            .navbar-brand:hover {
+                transform: scale(1.05);
+            }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem !important;
+            border-radius: 5px;
+        }
+
+            .nav-link:hover {
+                color: #fff !important;
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .dropdown-item {
+            transition: all 0.3s ease;
+            padding: 0.6rem 1.2rem;
+        }
+
+            .dropdown-item:hover {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+            }
+
+            .dropdown-item.text-danger:hover {
+                background: #dc3545;
+                color: white !important;
+            }
+
+        .footer {
+            margin-top: auto;
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</body>
+</html>
