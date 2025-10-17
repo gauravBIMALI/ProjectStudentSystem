@@ -3,42 +3,10 @@
     ViewData["Title"] = "Edit Admin Profile";
 }
 
-<style>
-    /* Ensure content doesn't hide behind a fixed footer */
-    body {
-        margin-bottom: 100px; /* adjust if your footer height changes */
-    }
-
-    /* Card improvements */
-    .profile-edit-card {
-        border-radius: 1rem;
-        padding: 1.5rem;
-    }
-
-    /* Fix spacing issue for bottom button */
-    .form-container {
-        padding-bottom: 2rem;
-    }
-
-    /* Center image and add subtle border */
-    #profilePreview {
-        border: 4px solid #f1f1f1;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    /* Make button stay visible on small screens */
-    .sticky-submit {
-        position: sticky;
-        bottom: 10px;
-        background-color: white;
-        padding-top: 10px;
-    }
-</style>
-
-<div class="container py-5 form-container">
+<div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
-            <div class="card shadow-sm border-0 profile-edit-card">
+            <div class="card shadow-sm border-0">
                 <div class="card-body">
                     <h3 class="card-title text-center mb-4">Edit Profile</h3>
 
@@ -70,16 +38,14 @@
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label asp-for="Email" class="form-label">Email</label>
                             <input asp-for="Email" class="form-control" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
-                        <div class=" d-grid">
-                            <button type="submit" class="btn btn-success btn-lg shadow-sm">
-                                Update Profile
-                            </button>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">Update Profile</button>
                         </div>
                     </form>
                 </div>
@@ -93,7 +59,8 @@
         function previewImage(event) {
             var reader = new FileReader();
             reader.onload = function () {
-                document.getElementById('profilePreview').src = reader.result;
+                var output = document.getElementById('profilePreview');
+                output.src = reader.result;
             };
             reader.readAsDataURL(event.target.files[0]);
         }

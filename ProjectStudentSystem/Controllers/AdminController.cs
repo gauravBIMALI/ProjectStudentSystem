@@ -49,6 +49,24 @@ namespace ProjectStudentSystem.Controllers
 
             return View(model);
         }
+        [HttpGet]
+        public async Task<IActionResult> EditProfile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var model = new AdminProfileViewModel
+            {
+                Name = user.FullName ?? string.Empty,
+                Email = user.Email ?? string.Empty,
+                ProfileImage = user.ProfileImage
+            };
+
+            return View(model);
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -76,7 +94,6 @@ namespace ProjectStudentSystem.Controllers
                     return View(model);
                 }
 
-                // Generate unique file name
                 var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Images");
                 var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ProfileImageFile.FileName);
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
@@ -86,7 +103,7 @@ namespace ProjectStudentSystem.Controllers
                     await model.ProfileImageFile.CopyToAsync(fileStream);
                 }
 
-                // Delete old image if exists
+                // delete old image if exists
                 if (!string.IsNullOrEmpty(user.ProfileImage))
                 {
                     var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, user.ProfileImage.TrimStart('/'));
@@ -94,11 +111,10 @@ namespace ProjectStudentSystem.Controllers
                         System.IO.File.Delete(oldImagePath);
                 }
 
-                // Save new path
                 user.ProfileImage = "/Images/" + uniqueFileName;
             }
 
-            // Update other fields
+            // Update name/email
             user.FullName = model.Name;
             user.Email = model.Email;
             user.UserName = model.Email;
@@ -115,6 +131,7 @@ namespace ProjectStudentSystem.Controllers
 
             return View(model);
         }
+
     }
 }
 
