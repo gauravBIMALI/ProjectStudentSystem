@@ -23,7 +23,7 @@ namespace ProjectStudentSystem.ViewModels
 
         [Required(ErrorMessage = "Select your role")]
         [Display(Name = "Role")]
-        public string Role { get; set; }
+        public string Role { get; set; } = null!;
 
         [Required(ErrorMessage = "Enter valid password")]
         [DataType(DataType.Password)]
