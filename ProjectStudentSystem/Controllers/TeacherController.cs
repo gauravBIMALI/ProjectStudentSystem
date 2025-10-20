@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProjectStudentSystem.Data;
 using ProjectStudentSystem.Models;
+using ProjectStudentSystem.ViewModels;
 
 namespace ProjectStudentSystem.Controllers
 {
@@ -46,6 +47,29 @@ namespace ProjectStudentSystem.Controllers
             };
             return View(model);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> EditProfile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var model = new TeacherProfileViewModel
+            {
+                Name = user.FullName ?? string.Empty,
+                Email = user.Email ?? string.Empty,
+                ProfileImage = user.ProfileImage,
+                Age = user.Age,
+                PhoneNumber = user.PhoneNumber != null ? int.Parse(user.PhoneNumber) : 0,
+                Role = user.Role.ToString(),
+            };
+
+            return View(model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> EditProfile(ViewModels.TeacherProfileViewModel model)
         {

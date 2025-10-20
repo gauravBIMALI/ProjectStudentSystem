@@ -1,1 +1,44 @@
-﻿<p>teacher profile</p>
+﻿@model ProjectStudentSystem.ViewModels.TeacherProfileViewModel
+@{
+    ViewData["Title"] = "Teacher Profile";
+}
+
+<div class="container py-5" style="min-height: 90vh;">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0 mb-5">
+                <div class="card-body text-center py-4">
+                    <h3 class="card-title mb-4 fw-bold text-primary">Teacher Profile</h3>
+
+                    <!-- Profile Image -->
+                    <div class="mb-4">
+                        <img src="@(string.IsNullOrEmpty(Model.ProfileImage)
+                                                                 ? "/images/Blank.jpg"
+                                                                 : Model.ProfileImage)"
+                             class="rounded-circle border border-2 border-secondary shadow-sm"
+                             style="width:150px; height:150px; object-fit:cover;"
+                             alt="Profile Image">
+                    </div>
+
+                    <!-- Profile Details -->
+                    <div class="text-start px-4">
+                        <p class="mb-2"><strong>Name:</strong> @Model.Name</p>
+                        <p class="mb-2"><strong>Email:</strong> @Model.Email</p>
+                        <p class="mb-2"><strong>Role:</strong> @Model.Role</p>
+                        <p class="mb-2"><strong>Phone:</strong> @Model.PhoneNumber</p>
+                        <p class="mb-3"><strong>Age:</strong> @Model.Age</p>
+                    </div>
+
+                    <!-- Edit Button -->
+                    <div class="mt-4 mb-2">
+                        <a asp-action="EditProfile"
+                           asp-controller="Teacher"
+                           class="btn btn-primary px-4">
+                            <i class="fas fa-edit me-1"></i> Edit Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
