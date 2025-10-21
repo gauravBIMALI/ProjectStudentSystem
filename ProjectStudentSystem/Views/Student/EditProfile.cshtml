@@ -1,4 +1,4 @@
-﻿@model ProjectStudentSystem.ViewModels.TeacherProfileViewModel
+﻿@model ProjectStudentSystem.ViewModels.StudentProfileViewModel
 @{
     ViewData["Title"] = "Edit Teacher Profile";
 }
@@ -50,8 +50,8 @@
                     <form asp-action="EditProfile" method="post" enctype="multipart/form-data">
                         <div class="mb-4">
                             <img src="@(string.IsNullOrEmpty(Model.ProfileImage)
-                                                                                                  ? "/images/Blank.jpg"
-                                                                                                  : Model.ProfileImage)"
+                                                                                                                                   ? "/images/Blank.jpg"
+                                                                                                                                   : Model.ProfileImage)"
                                  class="rounded-circle border border-2 border-secondary shadow-sm"
                                  style="width:150px; height:150px; object-fit:cover;"
                                  alt="Profile Image">
@@ -96,9 +96,6 @@
                         <div class=" d-grid">
                             <button type="submit" class="btn btn-success btn-lg shadow-sm">
                                 Update Profile
-                            </button>
-                            <button asp-action="Profile" class="btn btn-success btn-lg shadow-sm">
-                                Cancel
                             </button>
                         </div>
                     </form>
