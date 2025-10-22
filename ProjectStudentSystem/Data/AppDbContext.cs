@@ -10,6 +10,8 @@ namespace ProjectStudentSystem.Data
         {
         }
 
+        public DbSet<AddClass> AddClasses { get; set; } = default!;
+
 
     }
 }

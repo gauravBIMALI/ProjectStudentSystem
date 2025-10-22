@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProjectStudentSystem.Data;
 using ProjectStudentSystem.Models;
 using ProjectStudentSystem.ViewModels;
@@ -132,6 +133,38 @@ namespace ProjectStudentSystem.Controllers
             return View(model);
         }
 
+        public IActionResult CreateClasses()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateClasses([Bind("Section,Class")] AddClassViewModel addclass)
+        {
+            if (ModelState.IsValid)
+            {
+                var entity = new AddClass
+                {
+                    Section = addclass.Section,
+                    Class = addclass.Class
+                };
+
+                _context.AddClasses.Add(entity);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(ClassesList));
+            }
+
+            return View(addclass);
+        }
+
+
+        public async Task<IActionResult> ClassesList()
+        {
+            return View(await _context.AddClasses.ToListAsync());
+        }
+
+
     }
+
 }
 
