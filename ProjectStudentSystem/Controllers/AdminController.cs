@@ -164,6 +164,18 @@ namespace ProjectStudentSystem.Controllers
         }
 
 
+        //teacher list
+        public async Task<IActionResult> TeachersList()
+        {
+            // Fetch all teachers only
+            var teachers = await _context.Teachers
+                .Where(t => t.Role == "1" || t.Role.Equals("Teacher"))
+                .ToListAsync();
+
+            return View(teachers);
+        }
+
+
     }
 
 }

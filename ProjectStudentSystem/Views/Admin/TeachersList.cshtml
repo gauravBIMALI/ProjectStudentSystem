@@ -1,0 +1,56 @@
+﻿@model IEnumerable<ProjectStudentSystem.Models.Teacher>
+
+@{
+    ViewData["Title"] = "Teacher List";
+    int sn = 1;
+}
+
+<div class="container py-4">
+    <h3 class="mb-3 text-center">All Teachers</h3>
+
+    <table class="table table-bordered table-striped align-middle shadow-sm">
+        <thead class="table-dark text-center">
+            <tr>
+                <th>S.N</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Profile Image</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr class="text-center">
+                        <td>@sn</td>
+                        <td>@item.Name</td>
+                        <td>@item.Age</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>@item.Email</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.ProfileImage))
+                            {
+                                <img src="@Url.Content("~/uploads/" + item.ProfileImage)" alt="Profile" width="60" height="60" class="rounded-circle border" />
+                            }
+                            else
+                            {
+                                <img src="~/images/default-user.png" alt="Default" width="60" height="60" class="rounded-circle border" />
+                            }
+                        </td>
+                        <td>@item.Role</td>
+                    </tr> sn++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No teachers found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

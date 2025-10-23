@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Class List";
+    int sn=1;
 }
 
 <div class="container py-4">
@@ -16,6 +17,7 @@
     <table class="table table-bordered table-striped align-middle shadow-sm">
         <thead class="table-dark text-center">
             <tr>
+                <th>S.N</th>
                 <th>Class</th>
                 <th>Section</th>
                 <th style="width: 180px;">Actions</th>
@@ -27,6 +29,7 @@
                 foreach (var item in Model)
                 {
                     <tr class="text-center">
+                        <td>@sn</td>
                         <td>@item.Class</td>
                         <td>@item.Section</td>
                         <td>
@@ -39,14 +42,18 @@
                             </a>
                         </td>
                     </tr>
-                }
+                    sn++;
+                }                
+                
             }
+
             else
             {
                 <tr>
                     <td colspan="3" class="text-center text-muted">No classes added yet.</td>
                 </tr>
             }
+           
         </tbody>
     </table>
 </div>
