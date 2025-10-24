@@ -167,14 +167,28 @@ namespace ProjectStudentSystem.Controllers
         //teacher list
         public async Task<IActionResult> TeachersList()
         {
-            // Fetch all teachers only
-            var teachers = await _context.Teachers
-                .Where(t => t.Role == "1" || t.Role.Equals("Teacher"))
+            // Fetch all users where Role = 1 (Teacher)
+            var teachers = await _context.Users
+                .Where(u => u.Role == 1)
                 .ToListAsync();
 
-            return View(teachers);
+            return View(teachers); // Pass list of Users model
         }
 
+
+
+
+
+        //student list
+        public async Task<IActionResult> StudentsList()
+        {
+            // Fetch all users where Role = 0 (Student)
+            var students = await _context.Users
+                .Where(u => u.Role == 0)
+                .ToListAsync();
+
+            return View(students); // Pass list of Users model
+        }
 
     }
 

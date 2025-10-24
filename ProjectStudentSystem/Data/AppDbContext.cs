@@ -12,5 +12,6 @@ namespace ProjectStudentSystem.Data
 
         public DbSet<AddClass> AddClasses { get; set; } = default!;
         public DbSet<Teacher> Teachers { get; set; } = default!;
+        public DbSet<Student> Students { get; set; } = default!;
     }
 }
