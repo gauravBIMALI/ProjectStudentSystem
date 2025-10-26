@@ -18,6 +18,19 @@ namespace ProjectStudentSystem
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+
+                //  "Remember Me" 
+                options.SlidingExpiration = true;
+                options.ExpireTimeSpan = TimeSpan.FromDays(7); // 1 weeks cookie life
+                options.Cookie.IsEssential = true;
+            });
+
+
             builder.Services.AddIdentity<Users, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 5;

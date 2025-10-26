@@ -1,0 +1,189 @@
+﻿@model ProjectStudentSystem.ViewModels.UsersListViewModel
+
+@{
+    ViewData["Title"] = "Users List";
+    int snTeacher = 1;
+    int snStudent = 1;
+}
+<style>
+    #searchInput:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    .input-group:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transition: box-shadow 0.2s ease-in-out;
+    }
+
+</style>
+<div class="container py-5">
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-4">
+
+            <!-- Toggle Buttons -->
+            <div class="d-flex justify-content-center mb-4">
+                <button id="btnTeachers" class="btn btn-primary me-2">
+                    <i class="bi bi-people-fill me-1"></i> Teachers
+                </button>
+                <button id="btnStudents" class="btn btn-outline-primary">
+                    <i class="bi bi-mortarboard-fill me-1"></i> Students
+                </button>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="d-flex justify-content-center mb-4">
+                <div class="input-group w-50 shadow-sm rounded-pill overflow-hidden border border-1 border-dark">
+                    <span class="input-group-text bg-white border-0 ps-4">
+                        <i class="fa-solid fa-magnifying-glass text-primary fs-5"></i>
+                    </span>
+                    <input type="text"
+                           id="searchInput"
+                           class="form-control border-0 shadow-none py-2 ps-1"
+                           placeholder="Search by name, email, or age..." />
+                    <button class="btn btn-primary px-4 rounded-end-pill" type="button">
+                        Search
+                    </button>
+                </div>
+            </div>
+
+            <!-- Teachers Table -->
+            <div id="teachersTableContainer">
+                <h4 class="text-primary mb-3"><i class="bi bi-people-fill me-2"></i>Teachers List</h4>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle table-striped" id="teachersTable">
+                        <thead class="table-primary text-center">
+                            <tr>
+                                <th>#</th>
+                                <th>Profile</th>
+                                <th>Full Name</th>
+                                <th>Phone</th>
+                                <th>Age</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Teachers.Any())
+                            {
+                                foreach (var teacher in Model.Teachers)
+                                {
+                                    var imagePath = string.IsNullOrEmpty(teacher.ProfileImage)
+                                    ? Url.Content("~/Images/Blank.jpg")
+                                    : Url.Content("~/uploads/" + teacher.ProfileImage);
+
+                                    <tr>
+                                        <td class="text-center">@snTeacher</td>
+                                        <td class="text-center">
+                                            <img src="@imagePath" width="55" height="55"
+                                                 class="rounded-circle border border-2 border-light shadow-sm" />
+                                        </td>
+                                        <td>@teacher.FullName</td>
+                                        <td>@teacher.PhoneNumber</td>
+                                        <td>@teacher.Age</td>
+                                        <td>@teacher.Email</td>
+                                    </tr>
+                                    snTeacher++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-3">No teachers found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Students Table -->
+            <div id="studentsTableContainer" style="display:none;">
+                <h4 class="text-primary mb-3"><i class="bi bi-mortarboard-fill me-2"></i>Students List</h4>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle table-striped" id="studentsTable">
+                        <thead class="table-primary text-center">
+                            <tr>
+                                <th>#</th>
+                                <th>Profile</th>
+                                <th>Full Name</th>
+                                <th>Phone</th>
+                                <th>Age</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Students.Any())
+                            {
+                                foreach (var student in Model.Students)
+                                {
+                                    var imagePath = string.IsNullOrEmpty(student.ProfileImage)
+                                    ? Url.Content("~/Images/Blank.jpg")
+                                    : Url.Content("~/uploads/" + student.ProfileImage);
+
+                                    <tr>
+                                        <td class="text-center">@snStudent</td>
+                                        <td class="text-center">
+                                            <img src="@imagePath" width="55" height="55"
+                                                 class="rounded-circle border border-2 border-light shadow-sm" />
+                                        </td>
+                                        <td>@student.FullName</td>
+                                        <td>@student.PhoneNumber</td>
+                                        <td>@student.Age</td>
+                                        <td>@student.Email</td>
+                                    </tr>
+                                    snStudent++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-3">No students found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const btnTeachers = document.getElementById("btnTeachers");
+        const btnStudents = document.getElementById("btnStudents");
+        const teachersTable = document.getElementById("teachersTableContainer");
+        const studentsTable = document.getElementById("studentsTableContainer");
+
+        btnTeachers.addEventListener("click", function () {
+            teachersTable.style.display = "block";
+            studentsTable.style.display = "none";
+            btnTeachers.classList.add("btn-primary");
+            btnTeachers.classList.remove("btn-outline-primary");
+            btnStudents.classList.remove("btn-primary");
+            btnStudents.classList.add("btn-outline-primary");
+        });
+
+        btnStudents.addEventListener("click", function () {
+            studentsTable.style.display = "block";
+            teachersTable.style.display = "none";
+            btnStudents.classList.add("btn-primary");
+            btnStudents.classList.remove("btn-outline-primary");
+            btnTeachers.classList.remove("btn-primary");
+            btnTeachers.classList.add("btn-outline-primary");
+        });
+
+        // 🔍 Unified Search for both tables
+        document.getElementById("searchInput").addEventListener("keyup", function () {
+            const filter = this.value.toLowerCase();
+            const visibleTable = teachersTable.style.display === "none"
+                ? document.querySelectorAll("#studentsTable tbody tr")
+                : document.querySelectorAll("#teachersTable tbody tr");
+
+            visibleTable.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(filter) ? "" : "none";
+            });
+        });
+    </script>
+}

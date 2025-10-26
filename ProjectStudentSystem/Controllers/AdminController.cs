@@ -176,9 +176,6 @@ namespace ProjectStudentSystem.Controllers
         }
 
 
-
-
-
         //student list
         public async Task<IActionResult> StudentsList()
         {
@@ -187,9 +184,35 @@ namespace ProjectStudentSystem.Controllers
                 .Where(u => u.Role == 0)
                 .ToListAsync();
 
-            return View(students); // Pass list of Users model
+            return View(students);
         }
 
+        public async Task<IActionResult> UsersList()
+        {
+            var teachers = await _context.Users
+                .Where(u => u.Role == 1) // 1 = Teacher
+                .ToListAsync();
+
+            var students = await _context.Users
+                .Where(u => u.Role == 0) // 0 = Student
+                .ToListAsync();
+
+            var model = new UsersListViewModel
+            {
+                Teachers = teachers,
+                Students = students
+            };
+
+            return View(model);
+        }
+
+
+        [HttpGet]
+        public IActionResult CreateSubject()
+        {
+            return View();
+
+        }
     }
 
 }
