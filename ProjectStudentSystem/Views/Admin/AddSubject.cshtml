@@ -1,0 +1,44 @@
+﻿@model ProjectStudentSystem.ViewModels.AddSubjectViewModel
+
+<div class="container py-4 w-60">
+    <h3 class="mb-3 text-center">Add New Subject</h3>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    <form asp-action="AddSubject" method="post" class="shadow p-4  rounded bg-light">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <!-- Subject Field -->
+        <div class="mb-3">
+            <label asp-for="Subject" class="form-label fw-bold"></label>
+            <input asp-for="Subject" class="form-control shadow-sm" placeholder="Enter subject name" />
+            <span asp-validation-for="Subject" class="text-danger"></span>
+        </div>
+
+        <!-- Class Dropdown -->
+        <div class="mb-3">
+            <label asp-for="Class" class="form-label fw-bold">Select Class</label>
+            <select asp-for="Class" class="form-select shadow-sm">
+                <option value="">-- Select Class --</option>
+                @foreach (var cls in ViewBag.ClassList)
+                {
+                    <option value="@cls">@cls</option>
+                }
+            </select>
+            <span asp-validation-for="Class" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary  w-20">
+            <i class="fa-solid fa-plus me-2"></i> Add Subject
+        </button>
+
+        <a asp-action="SubjectList" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

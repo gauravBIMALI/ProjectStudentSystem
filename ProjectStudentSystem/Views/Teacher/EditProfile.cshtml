@@ -93,14 +93,11 @@
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
-                        <div class=" d-grid">
-                            <button type="submit" class="btn btn-success btn-lg shadow-sm">
-                                Update Profile
-                            </button>
-                            <button asp-action="Profile" class="btn btn-success btn-lg shadow-sm">
-                                Cancel
-                            </button>
-                        </div>
+                        <button type="submit" class="btn btn-primary  w-20">
+                            <i class="fa-solid fa-plus me-2"></i> Update Profile
+                        </button>
+
+                        <a asp-action="Profile" class="btn btn-secondary ms-2">Cancel</a>
                     </form>
                 </div>
             </div>

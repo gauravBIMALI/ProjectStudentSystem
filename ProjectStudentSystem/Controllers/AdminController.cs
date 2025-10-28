@@ -27,10 +27,30 @@ namespace ProjectStudentSystem.Controllers
         }
         [Authorize(Roles = "Admin")]
 
-        public IActionResult Index()
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
+
+
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var totalUsers = await _context.Users.CountAsync();
+            var totalTeachers = await _context.Users.CountAsync(u => u.Role == 1); // 1 = Teacher
+            var totalStudents = await _context.Users.CountAsync(u => u.Role == 0); // 0 = Student
+            var totalClasses = await _context.AddClasses.CountAsync();
+            var totalSubjects = await _context.AddSubjects.CountAsync();
+            var model = new AdminDashboardViewModel
+            {
+                TotalUsers = totalUsers,
+                TotalTeachers = totalTeachers,
+                TotalStudents = totalStudents,
+                TotalClasses = totalClasses,
+                TotalSubjects = totalSubjects
+            };
+            return View(model);
         }
+
 
         public async Task<IActionResult> Profile()
         {
@@ -132,17 +152,22 @@ namespace ProjectStudentSystem.Controllers
 
             return View(model);
         }
-
-        public IActionResult CreateClasses()
-        {
-            return View();
-        }
+        public IActionResult CreateClasses() { return View(); }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateClasses([Bind("Section,Class")] AddClassViewModel addclass)
         {
             if (ModelState.IsValid)
             {
+                bool exists = await _context.AddClasses
+                    .AnyAsync(c => c.Class == addclass.Class && c.Section == addclass.Section);
+
+                if (exists)
+                {
+                    ModelState.AddModelError(string.Empty, $"Class {addclass.Class}{addclass.Section} already exists.");
+                    return View(addclass);
+                }
+
                 var entity = new AddClass
                 {
                     Section = addclass.Section,
@@ -151,11 +176,14 @@ namespace ProjectStudentSystem.Controllers
 
                 _context.AddClasses.Add(entity);
                 await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = $"Class {addclass.Class}{addclass.Section} created successfully!";
                 return RedirectToAction(nameof(ClassesList));
             }
 
             return View(addclass);
         }
+
 
 
         public async Task<IActionResult> ClassesList()
@@ -164,28 +192,11 @@ namespace ProjectStudentSystem.Controllers
         }
 
 
-        //teacher list
-        public async Task<IActionResult> TeachersList()
-        {
-            // Fetch all users where Role = 1 (Teacher)
-            var teachers = await _context.Users
-                .Where(u => u.Role == 1)
-                .ToListAsync();
-
-            return View(teachers); // Pass list of Users model
-        }
 
 
-        //student list
-        public async Task<IActionResult> StudentsList()
-        {
-            // Fetch all users where Role = 0 (Student)
-            var students = await _context.Users
-                .Where(u => u.Role == 0)
-                .ToListAsync();
 
-            return View(students);
-        }
+
+
 
         public async Task<IActionResult> UsersList()
         {
@@ -205,15 +216,75 @@ namespace ProjectStudentSystem.Controllers
 
             return View(model);
         }
-
-
-        [HttpGet]
-        public IActionResult CreateSubject()
+        //subject list
+        public async Task<IActionResult> SubjectList()
         {
-            return View();
+            var subjects = await _context.AddSubjects
+                .OrderBy(s => s.Class)
+                .ThenBy(s => s.Subject)
+                .ToListAsync();
 
+            return View(subjects);
+        }
+
+
+        public IActionResult AddSubject()
+        {
+            // Fetch distinct class list (ignore sections)
+            ViewBag.ClassList = _context.AddClasses
+                .Select(c => c.Class)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToList();
+
+            return View();
+        }
+
+        // POST: Add Subject
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddSubject(AddSubjectViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Prevent duplicates (same subject for same class)
+                bool exists = await _context.AddSubjects
+                    .AnyAsync(s => s.Subject == model.Subject && s.Class == model.Class);
+
+                if (exists)
+                {
+                    ModelState.AddModelError("", $"Subject '{model.Subject}' already exists for Class {model.Class}.");
+                    ViewBag.ClassList = _context.AddClasses
+                        .Select(c => c.Class)
+                        .Distinct()
+                        .OrderBy(c => c)
+                        .ToList();
+                    return View(model);
+                }
+
+                var subject = new AddSubject
+                {
+                    Subject = model.Subject,
+                    Class = model.Class
+                };
+
+                _context.AddSubjects.Add(subject);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = $"Subject '{model.Subject}' added successfully for Class {model.Class}.";
+                return RedirectToAction(nameof(SubjectList)); // create SubjectList view later
+            }
+
+            ViewBag.ClassList = _context.AddClasses
+                .Select(c => c.Class)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToList();
+
+            return View(model);
         }
     }
-
 }
+
+
 

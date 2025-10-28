@@ -40,7 +40,7 @@ namespace ProjectStudentSystem.Controllers
             {
                 Name = user.FullName ?? "Unknown",
                 Email = user.Email ?? "Unknown",
-                PhoneNumber = user.PhoneNumber != null ? int.Parse(user.PhoneNumber) : 0,
+                PhoneNumber = user.PhoneNumber ?? "N/A",
                 Age = user.Age,
                 Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault() ?? "Unknown",
                 ProfileImage = user.ProfileImage // file path
@@ -63,7 +63,8 @@ namespace ProjectStudentSystem.Controllers
                 Email = user.Email ?? string.Empty,
                 ProfileImage = user.ProfileImage,
                 Age = user.Age,
-                PhoneNumber = user.PhoneNumber != null ? int.Parse(user.PhoneNumber) : 0,
+                PhoneNumber = user.PhoneNumber ?? "N/A",
+
                 Role = user.Role.ToString(),
             };
 
